@@ -7,7 +7,8 @@ import java.util.List;
  */
 public class Node {
 
-    String label;
+    String question;
+    String value;
     Node parent;
     List<Node> subtrees = new ArrayList<Node>();
 
@@ -18,7 +19,6 @@ public class Node {
     }
 
     public Node addNode(Node sub) {
-        this.label = sub.label;
         if(sub != null) {
             subtrees.add(sub);
         }
@@ -32,14 +32,19 @@ public class Node {
 
     @Override
     public String toString() {
-        String value = "(" + label+ ")";
+        StringBuilder toString = new StringBuilder("(" + question + ")");
+        if(value != null) {
+            toString.append("["+ value + "]");
+        }
+        toString.append("\n");
         if(subtrees.size() != 0) {
             for(Node node: subtrees) {
-                toString(node);
-                System.out.println("\n");
+                toString.append(toString(node));
             }
+
         }
 
-        return value;
+
+        return toString.toString();
     }
 }

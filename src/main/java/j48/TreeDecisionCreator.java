@@ -1,8 +1,11 @@
 package j48;
 
+import com.sun.corba.se.spi.activation.IIOP_CLEAR_TEXT;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.*;
+
+import static com.sun.corba.se.spi.activation.IIOP_CLEAR_TEXT.value;
 
 /**
  * Created by kete on 9/21/16.
@@ -15,12 +18,15 @@ public class TreeDecisionCreator {
         String[] attributes = dataSet.attributesHeader;
         Map<String, Integer> classifierMap = dataSet.getClassifierQuantities();
 
-        if( attributes == null || attributes.length <= 1 ) {
-            return getValueMost(examples, classifierMap);
+        if( attributes == null || attributes.length <= 1 || examples.isEmpty()) {
+            Node valueMost = getValueMost(examples, classifierMap);
+            return valueMost ;
 
         } else if(classifierMap.size() == 1){
             //se tem apenas uma classificacao, retorna ela.
-            tree.label = String.valueOf(classifierMap.keySet().toArray()[0]);
+            String value = String.valueOf(classifierMap.keySet().toArray()[0]);
+            tree.question = value;
+            tree.value = value;
         } else {
             AttributeInfo bestAttribute = dataSet.getBestAttribute((String[]) ArrayUtils.removeElement(attributes, targetAttribute));
 
@@ -28,7 +34,7 @@ public class TreeDecisionCreator {
 
             System.out.println("Best: "+bestAttrLabel);
 
-            tree.label = bestAttrLabel;
+            tree.question = bestAttrLabel;
             String[] newAttributes = (String[]) ArrayUtils.removeElement(attributes, bestAttribute.getName());
 
             Map<String, AttributeChildInfo> childs = bestAttribute.childs;
@@ -36,8 +42,11 @@ public class TreeDecisionCreator {
             for(String key: childs.keySet()) {
                 List<Example> exs = getExampleByAttributeChild(bestAttrLabel, childs.get(key), examples);
                 DataSet newDataSet = getNewDataSet(exs, newAttributes, targetAttribute);
+                Node subtreeChild = new Node();
+                subtreeChild.question = key;
                 Node subtree = getTree(newDataSet, targetAttribute);
-                tree.addNode(subtree);
+                subtreeChild.addNode(subtree);
+                tree.addNode(subtreeChild);
             }
 
         }
@@ -76,7 +85,8 @@ public class TreeDecisionCreator {
             }
         }
 
-        tree.label = mostValueAttr;
+        tree.question = mostValueAttr;
+        tree.value = mostValueAttr;
 
         return tree;
 

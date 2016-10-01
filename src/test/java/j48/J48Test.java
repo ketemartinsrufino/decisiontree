@@ -42,7 +42,7 @@ public class J48Test {
 
         TreeDecisionCreator creator = new TreeDecisionCreator();
         Node tree = creator.getTree(dataSet, "meta");
-        Assert.assertEquals(tree.label, "s");
+        Assert.assertEquals(tree.question, "s");
         Assert.assertEquals(tree.subtrees.size(), 0);
     }
 
@@ -56,7 +56,7 @@ public class J48Test {
 
         TreeDecisionCreator creator = new TreeDecisionCreator();
         Node tree = creator.getTree(dataSet, "meta");
-        Assert.assertEquals(tree.label, "s");
+        Assert.assertEquals(tree.question, "s");
         Assert.assertEquals(tree.subtrees.size(), 0);
         System.out.println(tree);
     }
