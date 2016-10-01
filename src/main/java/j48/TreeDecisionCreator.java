@@ -19,20 +19,18 @@ public class TreeDecisionCreator {
         Map<String, Integer> classifierMap = dataSet.getClassifierQuantities();
 
         if( attributes == null || attributes.length <= 1 || examples.isEmpty()) {
+            System.out.println("getValueMost");
             Node valueMost = getValueMost(examples, classifierMap);
             return valueMost ;
 
         } else if(classifierMap.size() == 1){
             //se tem apenas uma classificacao, retorna ela.
             String value = String.valueOf(classifierMap.keySet().toArray()[0]);
-            tree.question = value;
             tree.value = value;
         } else {
             AttributeInfo bestAttribute = dataSet.getBestAttribute((String[]) ArrayUtils.removeElement(attributes, targetAttribute));
 
             String bestAttrLabel = bestAttribute.getName();
-
-            System.out.println("Best: "+bestAttrLabel);
 
             tree.question = bestAttrLabel;
             String[] newAttributes = (String[]) ArrayUtils.removeElement(attributes, bestAttribute.getName());
@@ -45,7 +43,12 @@ public class TreeDecisionCreator {
                 Node subtreeChild = new Node();
                 subtreeChild.question = key;
                 Node subtree = getTree(newDataSet, targetAttribute);
-                subtreeChild.addNode(subtree);
+                if(subtree.question != null) {
+                    subtreeChild.addNode(subtree);
+                } else {
+                    subtreeChild.value = subtree.value;
+                }
+
                 tree.addNode(subtreeChild);
             }
 

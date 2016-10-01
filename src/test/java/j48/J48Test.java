@@ -42,8 +42,8 @@ public class J48Test {
 
         TreeDecisionCreator creator = new TreeDecisionCreator();
         Node tree = creator.getTree(dataSet, "meta");
-        Assert.assertEquals(tree.question, "s");
-        Assert.assertEquals(tree.subtrees.size(), 0);
+        Assert.assertEquals("s",tree.value);
+        Assert.assertEquals(0, tree.subtrees.size());
     }
 
     @Test

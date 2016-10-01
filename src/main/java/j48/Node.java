@@ -27,23 +27,30 @@ public class Node {
     }
 
     public String toString(Node node) {
-        return " -> " + node.toString();
+
+        return node.toString();
     }
 
-    @Override
     public String toString() {
-        StringBuilder toString = new StringBuilder("(" + question + ")");
-        if(value != null) {
-            toString.append("["+ value + "]");
+        StringBuilder toString = new StringBuilder("");
+
+        if(question != null) {
+            toString.append("(" + question + ")");
         }
-        toString.append("\n");
+
+        if(value != null) {
+            toString.append("["+ value + "] ");
+        }
+
         if(subtrees.size() != 0) {
+            toString.append("{ ");
             for(Node node: subtrees) {
                 toString.append(toString(node));
             }
-
+            toString.append(" }, ");
+        } else {
+            toString.append(", ");
         }
-
 
         return toString.toString();
     }
